@@ -4091,18 +4091,19 @@ _ns_select_doh() {
   fi
 }
 
-_ns_loookup_plain() {
+_ns_lookup_plain() {
   _answers=$(dig +short $1 $2) || _err "Command dig failed!"
+  _debug "DNS plain lookup results: $_answers"
   echo $_answers | tail -n 1 | tr -d '"'
 }
 
 #domain, type
 _ns_lookup() {
   if [ -z "$DOH_USE" ]; then
-  _ns_lookup_plain "$@"
+    _ns_lookup_plain "$@"
   else
     _ns_select_doh
-    if [ "$DOH_USE" = "$DOH_CLOUDFLARE" ] || [ -z "$DOH_USE" ]; then
+    if [ "$DOH_USE" = "$DOH_CLOUDFLARE" ]; then
       _ns_lookup_cf "$@"
     elif [ "$DOH_USE" = "$DOH_GOOGLE" ]; then
       _ns_lookup_google "$@"
