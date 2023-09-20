@@ -4091,19 +4091,27 @@ _ns_select_doh() {
   fi
 }
 
+_ns_loookup_plain() {
+  dig +short $1 $2 || _err "Command dig failed!"
+}
+
 #domain, type
 _ns_lookup() {
-  _ns_select_doh
-  if [ "$DOH_USE" = "$DOH_CLOUDFLARE" ] || [ -z "$DOH_USE" ]; then
-    _ns_lookup_cf "$@"
-  elif [ "$DOH_USE" = "$DOH_GOOGLE" ]; then
-    _ns_lookup_google "$@"
-  elif [ "$DOH_USE" = "$DOH_ALI" ]; then
-    _ns_lookup_ali "$@"
-  elif [ "$DOH_USE" = "$DOH_DP" ]; then
-    _ns_lookup_dp "$@"
+  if [ -z "$DOH_USE" ]; then
+  _ns_lookup_plain "$@"
   else
-    _err "Unknown doh provider: DOH_USE=$DOH_USE"
+    _ns_select_doh
+    if [ "$DOH_USE" = "$DOH_CLOUDFLARE" ] || [ -z "$DOH_USE" ]; then
+      _ns_lookup_cf "$@"
+    elif [ "$DOH_USE" = "$DOH_GOOGLE" ]; then
+      _ns_lookup_google "$@"
+    elif [ "$DOH_USE" = "$DOH_ALI" ]; then
+      _ns_lookup_ali "$@"
+    elif [ "$DOH_USE" = "$DOH_DP" ]; then
+      _ns_lookup_dp "$@"
+    else
+      _err "Unknown doh provider: DOH_USE=$DOH_USE"
+    fi
   fi
 
 }
