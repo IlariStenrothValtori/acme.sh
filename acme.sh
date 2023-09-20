@@ -4126,7 +4126,7 @@ __check_txt() {
   _debug "_c_txtdomain" "$_c_txtdomain"
   _debug "_c_aliasdomain" "$_c_aliasdomain"
   _debug "_c_txt" "$_c_txt"
-  test -n "$DOH_USE" && "_ns_select_doh
+  test -n "$DOH_USE" && _ns_select_doh
   _answers="$(_ns_lookup "$_c_aliasdomain" TXT)"
   _contains "$_answers" "$_c_txt"
 
