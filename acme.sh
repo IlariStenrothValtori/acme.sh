@@ -4126,7 +4126,7 @@ __check_txt() {
   _debug "_c_txtdomain" "$_c_txtdomain"
   _debug "_c_aliasdomain" "$_c_aliasdomain"
   _debug "_c_txt" "$_c_txt"
-  _ns_select_doh
+  test -n "$DOH_USE" && "_ns_select_doh
   _answers="$(_ns_lookup "$_c_aliasdomain" TXT)"
   _contains "$_answers" "$_c_txt"
 
@@ -4136,8 +4136,11 @@ __check_txt() {
 __purge_txt() {
   _p_txtdomain="$1"
   _debug _p_txtdomain "$_p_txtdomain"
-  if [ "$DOH_USE" = "$DOH_CLOUDFLARE" ] || [ -z "$DOH_USE" ]; then
+  if [ "$DOH_USE" = "$DOH_CLOUDFLARE" ]; then
     _ns_purge_cf "$_p_txtdomain" "TXT"
+  elif [ -z "$DOH_USE" ]; then
+    _debug "Using plain DNS, no DNS purge available, just sleep 5 secs"
+    _sleep 5
   else
     _debug "no purge api for this doh api, just sleep 5 secs"
     _sleep 5
