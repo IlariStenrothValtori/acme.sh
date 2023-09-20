@@ -4092,7 +4092,8 @@ _ns_select_doh() {
 }
 
 _ns_loookup_plain() {
-  dig +short $1 $2 || _err "Command dig failed!"
+  _answers=$(dig +short $1 $2) || _err "Command dig failed!"
+  echo $_answers | tail -n 1 | tr -d '"'
 }
 
 #domain, type
